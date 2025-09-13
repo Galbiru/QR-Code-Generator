@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background-color: white;
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+    }
+    h1 {
+      color: #333;
+    }
+    label {
+      font-size: 16px;
+      color: #555;
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #qr-code {
+      margin-top: 20px;
+      display: none;
+      margin-bottom: 20px;
+    }
+    #download-section {
+      display: none;
+      margin-top: 20px;
+    }
+    #name-input {
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Enter the Text/Link</h1>
+  
+  <!-- Input form for text or link -->
+  <label for="inputText">Text/Link:</label>
+  <input type="text" id="inputText" placeholder="Enter text or link">
+  
+  <!-- Button to generate QR Code -->
+  <button id="generateQR">Convert to QR Code</button>
+  
+  <!-- Area to display QR Code -->
+  <div id="qr-code"></div>
+  
+  <!-- Download section -->
+  <div id="download-section">
+    <label for="nameInput">Enter Your Name:</label>
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button id="downloadBtn">Download QR Code</button>
+  </div>
+</div>
+
+<script>
+  // Event listener for generating QR Code
+  document.getElementById('generateQR').addEventListener('click', function() {
+    var text = document.getElementById('inputText').value;
+
+    if (text) {
+      // Generate the QR code
+      var qrCodeDiv = document.getElementById('qr-code');
+      qrCodeDiv.innerHTML = ''; // Clear previous QR code
+      QRCode.toCanvas(qrCodeDiv, text, function(error) {
+        if (error) {
+          console.error(error);
+        } else {
+          qrCodeDiv.style.display = 'block'; // Show QR code
+          document.getElementById('download-section').style.display = 'block'; // Show download section
+        }
+      });
+    } else {
+      alert('Please enter a valid text or link.');
+    }
+  });
+
+  // Event listener for downloading QR Code as PDF
+  document.getElementById('downloadBtn').addEventListener('click', function() {
+    var name = document.getElementById('nameInput').value;
+    
+    if (name) {
+      // Create PDF from QR code
+      var qrCanvas = document.getElementById('qr-code').querySelector('canvas');
+      if (qrCanvas) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        // Add QR code image to PDF
+        var imgData = qrCanvas.toDataURL("image/png");
+        doc.addImage(imgData, 'PNG', 10, 10, 180, 180);
+        
+        // Save the PDF with the name entered by the user
+        doc.save(name + '.pdf');
+      }
+    } else {
+      alert('Please enter your name.');
+    }
+  });
+</script>
+
+</body>
+</html>
