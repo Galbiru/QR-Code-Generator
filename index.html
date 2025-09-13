@@ -6,7 +6,6 @@
   <title>QR Code Generator</title>
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -118,23 +117,22 @@
     }
   });
 
-  // Event listener for downloading QR Code as PDF
+  // Event listener for downloading QR Code as PNG
   document.getElementById('downloadBtn').addEventListener('click', function() {
     var name = document.getElementById('nameInput').value;
     
     if (name) {
-      // Create PDF from QR code
+      // Create PNG from QR code
       var qrCanvas = document.getElementById('qr-code').querySelector('canvas');
       if (qrCanvas) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        // Add QR code image to PDF
+        // Convert canvas to PNG data URL
         var imgData = qrCanvas.toDataURL("image/png");
-        doc.addImage(imgData, 'PNG', 10, 10, 180, 180);
         
-        // Save the PDF with the name entered by the user
-        doc.save(name + '.pdf');
+        // Create a temporary link to trigger the download
+        var link = document.createElement('a');
+        link.href = imgData;
+        link.download = name + '.png'; // Use the name entered by the user
+        link.click();
       }
     } else {
       alert('Please enter your name.');
