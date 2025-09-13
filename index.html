@@ -1,231 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QR Code Generator</title>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QR Code Generator</title>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-        body {
-            font-family: 'Poppins', Arial, sans-serif;
-            background: linear-gradient(135deg, #a8c0ff, #3f2b96);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #333;
-        }
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: linear-gradient(135deg, #a8c0ff, #3f2b96);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
 
-        .container {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            width: 100%;
-            max-width: 450px;
-            animation: fadeIn 1s ease-out;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+    .container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
+      animation: fadeIn 1s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        h1 {
-            color: #3f2b96;
-            margin-bottom: 10px;
-            font-size: 2em;
-        }
+    h1 {
+      color: #3f2b96;
+      margin-bottom: 10px;
+      font-size: 2em;
+    }
 
-        label {
-            font-size: 1.1em;
-            color: #555;
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
+    label {
+      font-size: 1.1em;
+      color: #555;
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
 
-        input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 12px;
-            font-size: 1em;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            outline: none;
-        }
+    input[type="text"] {
+      width: calc(100% - 20px);
+      padding: 12px;
+      font-size: 1em;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      outline: none;
+    }
 
-        input[type="text"]:focus {
-            border-color: #a8c0ff;
-            box-shadow: 0 0 8px rgba(168, 192, 255, 0.6);
-        }
+    input[type="text"]:focus {
+      border-color: #a8c0ff;
+      box-shadow: 0 0 8px rgba(168, 192, 255, 0.6);
+    }
 
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-        }
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
 
-        button {
-            padding: 12px 25px;
-            background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-        }
+    button {
+      padding: 12px 25px;
+      background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
-        }
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
 
-        #qr-code {
-            display: none;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-            margin-top: 20px;
-        }
+    #qr-code {
+      display: none;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+      margin-top: 20px;
+    }
 
-        #qr-code canvas {
-            max-width: 100%;
-            height: auto;
-            border: 5px solid #fff;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+    #qr-code canvas {
+      max-width: 100%;
+      height: auto;
+      border: 5px solid #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+    }
 
-        #download-section {
-            display: none;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            margin-top: 20px;
-        }
+    #download-section {
+      display: none;
+      padding-top: 20px;
+      border-top: 1px solid #eee;
+      margin-top: 20px;
+    }
 
-        .alert {
-            background-color: #ffdddd;
-            color: #d8000c;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #d8000c;
-            display: none;
-            margin-bottom: 20px;
-        }
-    </style>
+    .alert {
+      background-color: #ffdddd;
+      color: #d8000c;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #d8000c;
+      display: none;
+      margin-bottom: 20px;
+    }
+
+    #generateQR {
+      display: none; /* Menyembunyikan tombol "Buat QR Code" */
+    }
+  </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>QR Code Generator</h1>
+  <h1>QR Code Generator</h1>
 
-    <div id="message-alert" class="alert"></div>
+  <div id="message-alert" class="alert"></div>
 
-    <div class="input-section">
-        <label for="inputText">Masukkan Teks atau Tautan:</label>
-        <input type="text" id="inputText" placeholder="Contoh: https://www.google.com">
-        <button id="generateQR"><i class="fas fa-qrcode"></i> Buat QR Code</button>
-    </div>
+  <div class="input-section">
+    <label for="inputText">Masukkan Teks atau Tautan:</label>
+    <input type="text" id="inputText" placeholder="Contoh: https://www.google.com">
+    <button id="generateQR"><i class="fas fa-qrcode"></i> Buat QR Code</button>
+  </div>
 
-    <div id="qr-code"></div>
+  <div id="qr-code"></div>
 
-    <div id="download-section">
-        <label for="nameInput">Nama File untuk Diunduh:</label>
-        <input type="text" id="nameInput" placeholder="Contoh: qrcode-website-saya">
-        <button id="downloadBtn"><i class="fas fa-download"></i> Unduh QR Code</button>
-    </div>
+  <div id="download-section">
+    <label for="nameInput">Nama File untuk Diunduh:</label>
+    <input type="text" id="nameInput" placeholder="Contoh: qrcode-website-saya">
+    <button id="downloadBtn"><i class="fas fa-download"></i> Unduh QR Code</button>
+  </div>
 </div>
 
 <script>
-    function showAlert(message, type = 'error') {
-        const alertDiv = document.getElementById('message-alert');
-        alertDiv.textContent = message;
-        alertDiv.className = `alert ${type}`;
-        alertDiv.style.display = 'block';
-        setTimeout(() => {
-            alertDiv.style.display = 'none';
-        }, 3000);
-    }
+  // Fungsi untuk menampilkan pesan alert
+  function showAlert(message, type = 'error') {
+    const alertDiv = document.getElementById('message-alert');
+    alertDiv.textContent = message;
+    alertDiv.className = `alert ${type}`;
+    alertDiv.style.display = 'block';
+    setTimeout(() => {
+      alertDiv.style.display = 'none';
+    }, 3000);
+  }
 
-    document.getElementById('generateQR').addEventListener('click', function() {
-        var text = document.getElementById('inputText').value.trim();
+  // Fungsi untuk membuat QR Code
+  function generateQRCode(text) {
+    var qrCodeDiv = document.getElementById('qr-code');
+    var downloadSection = document.getElementById('download-section');
+    
+    if (text) {
+      qrCodeDiv.innerHTML = '';
+      downloadSection.style.display = 'none'; // Sembunyikan tombol unduh saat membuat yang baru
 
-        if (text) {
-            var qrCodeDiv = document.getElementById('qr-code');
-            qrCodeDiv.innerHTML = '';
+      var qrOptions = {
+        errorCorrectionLevel: 'H',
+        type: 'image/jpeg',
+        quality: 0.92,
+        margin: 1,
+        scale: 10,
+        color: {
+          dark: "#3f2b96FF",
+          light: "#FFFFFFFF"
+        }
+      };
 
-            var qrOptions = {
-                errorCorrectionLevel: 'H',
-                type: 'image/jpeg',
-                quality: 0.92,
-                margin: 1,
-                scale: 10,
-                color: {
-                    dark: "#3f2b96FF",
-                    light: "#FFFFFFFF"
-                }
-            };
+      QRCode.toCanvas(qrCodeDiv, text, qrOptions, function(error) {
+        if (error) {
+          console.error(error);
+          qrCodeDiv.style.display = 'none';
+        } else {
+          qrCodeDiv.style.display = 'block';
+          downloadSection.style.display = 'block';
+        }
+      });
+    } else {
+      qrCodeDiv.style.display = 'none';
+      downloadSection.style.display = 'none';
+    }
+  }
 
-            QRCode.toCanvas(qrCodeDiv, text, qrOptions, function(error) {
-                if (error) {
-                    console.error(error);
-                    showAlert('Gagal membuat QR Code. Coba lagi.', 'error');
-                } else {
-                    qrCodeDiv.style.display = 'block';
-                    document.getElementById('download-section').style.display = 'block';
-                    showAlert('QR Code berhasil dibuat!', 'success');
-                }
-            });
-        } else {
-            showAlert('Harap masukkan teks atau tautan yang valid.', 'error');
-        }
-    });
+  // Event listener untuk input teks
+  document.getElementById('inputText').addEventListener('input', function() {
+    var text = this.value.trim();
+    // Delay sedikit untuk menghindari re-render yang terlalu cepat
+    clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      generateQRCode(text);
+    }, 500); // Tunggu 500ms setelah user berhenti mengetik
+  });
 
-    document.getElementById('downloadBtn').addEventListener('click', function() {
-        var name = document.getElementById('nameInput').value.trim();
-        var qrCanvas = document.getElementById('qr-code').querySelector('canvas');
-        
-        if (!qrCanvas) {
-            showAlert('Tidak ada QR Code untuk diunduh. Harap buat QR Code terlebih dahulu.', 'error');
-            return;
-        }
+  // Event listener untuk mengunduh QR Code sebagai PNG
+  document.getElementById('downloadBtn').addEventListener('click', function() {
+    var name = document.getElementById('nameInput').value.trim();
+    var qrCanvas = document.getElementById('qr-code').querySelector('canvas');
+    
+    if (!qrCanvas) {
+      showAlert('Tidak ada QR Code untuk diunduh. Harap masukkan teks terlebih dahulu.', 'error');
+      return;
+    }
 
-        if (name) {
-            var imgData = qrCanvas.toDataURL("image/png");
-            var link = document.createElement('a');
-            link.href = imgData;
-            link.download = name + '.png';
-            link.click();
-            showAlert('QR Code Anda sedang diunduh!', 'success');
-        } else {
-            showAlert('Harap masukkan nama file untuk diunduh.', 'error');
-        }
-    });
+    if (name) {
+      var imgData = qrCanvas.toDataURL("image/png");
+      var link = document.createElement('a');
+      link.href = imgData;
+      link.download = name + '.png';
+      link.click();
+      showAlert('QR Code Anda sedang diunduh!', 'success');
+    } else {
+      showAlert('Harap masukkan nama file untuk diunduh.', 'error');
+    }
+  });
 </script>
 
 </body>
