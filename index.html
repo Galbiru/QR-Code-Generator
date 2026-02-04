@@ -1,502 +1,983 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Code Master</title>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRIT Project</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-    :root {
-      --primary-color: #0f3460;
-      --accent-color: #e94560;
-      --glass-bg: rgba(255, 255, 255, 0.1);
-      --glass-border: rgba(255, 255, 255, 0.2);
-      --text-color: #ffffff;
-      --input-bg: rgba(0, 0, 0, 0.3);
-    }
+        :root {
+            --pink-main: #ff85b3;
+            --pink-soft: #ffdcf0;
+            --blue-soft: #d0f0fd;
+            --white-soft: #fdfbff;
+            --dark-text: #2b2030;
+        }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      color: var(--text-color);
-      overflow-x: hidden;
-    }
+        * { box-sizing: border-box; }
 
-    .background-shapes {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      z-index: -1;
-    }
+        body {
+            font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            min-height: 100vh;
+            /* Iridescent Shampoo Gradient */
+            background:
+                radial-gradient(circle at 20% 20%, rgba(208, 240, 253, 0.8), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 182, 212, 0.8), transparent 50%),
+                linear-gradient(135deg, #e6f7ff 0%, #fff0f6 50%, #e6fff0 100%);
+            padding: 24px 12px 32px;
+            color: var(--dark-text);
+            overflow-x: hidden;
+            position: relative;
+        }
 
-    .shape {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.6;
-      animation: float 10s infinite ease-in-out;
-    }
+        /* Foam Decoration */
+        .foam-decoration {
+            position: fixed;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-image: radial-gradient(circle at 10px 10px, rgba(255,255,255,0.8) 10px, transparent 11px);
+            background-size: 30px 40px;
+            background-repeat: repeat-x;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.6;
+        }
 
-    .shape:nth-child(1) {
-      top: -10%;
-      left: -10%;
-      width: 500px;
-      height: 500px;
-      background: #e94560;
-      animation-delay: 0s;
-    }
+        .app-shell {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(14px);
+            border-radius: 26px;
+            box-shadow: 0 18px 40px rgba(100, 149, 237, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            padding: 24px 18px 20px;
+            position: relative;
+            z-index: 10;
+        }
 
-    .shape:nth-child(2) {
-      bottom: -10%;
-      right: -10%;
-      width: 400px;
-      height: 400px;
-      background: #533483;
-      animation-delay: 5s;
-    }
+        .fade-transition { transition: opacity 0.4s ease; }
 
-    @keyframes float {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(20px) scale(1.05); }
-    }
+        /* WELCOME PAGE */
+        #welcome-page {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
 
-    .container {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 90%;
-      max-width: 500px;
-      animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
+        .welcome-tag {
+            letter-spacing: 0.25em;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #5588a3;
+        }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .welcome-title {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 2.15rem;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-top: 0.75rem;
+            margin-bottom: 0.3rem;
+            background: linear-gradient(135deg, #ff6fa8, #4facfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    h1 {
-      margin-bottom: 20px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: linear-gradient(to right, #fff, #a8c0ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .welcome-sub {
+            font-size: 0.95rem;
+            color: #5d7482;
+        }
 
-    .tabs {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 25px;
-      background: var(--input-bg);
-      border-radius: 30px;
-      padding: 5px;
-    }
+        #start-btn {
+            margin-top: 1.9rem;
+            padding: 0.9rem 3rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            cursor: pointer;
+            background-image: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+            background-size: 200% auto;
+            color: white;
+            box-shadow: 0 10px 25px rgba(161, 140, 209, 0.4);
+            transition:
+                background-position 0.4s ease,
+                transform 0.16s ease,
+                box-shadow 0.16s ease;
+        }
 
-    .tab-btn {
-      flex: 1;
-      padding: 10px 20px;
-      border: none;
-      background: transparent;
-      color: #aaa;
-      cursor: pointer;
-      font-family: inherit;
-      font-weight: 600;
-      border-radius: 25px;
-      transition: all 0.3s ease;
-    }
+        #start-btn:hover {
+            background-position: right center;
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(161, 140, 209, 0.5);
+        }
 
-    .tab-btn.active {
-      background: var(--accent-color);
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4);
-    }
+        #start-btn:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 6px 16px rgba(161, 140, 209, 0.45);
+        }
 
-    .input-group {
-      display: none;
-      animation: fadeIn 0.5s ease;
-    }
+        /* MAIN HEADER */
+        .main-header {
+            text-align: center;
+            margin-bottom: 0.9rem;
+            position: relative;
+            z-index: 10;
+        }
 
-    .input-group.active {
-      display: block;
-    }
+        .main-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            padding: 0.32rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(208, 240, 253, 0.45);
+            border: 1px solid rgba(135, 206, 250, 0.5);
+            color: #4facfe;
+            margin-bottom: 0.5rem;
+        }
 
-    .color-section {
-      display: flex;
-      justify-content: space-between;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
+        .main-title {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.55rem;
+            font-weight: 700;
+            color: #3a2237;
+        }
 
-    .color-group {
-      flex: 1;
-      text-align: left;
-    }
+        .daily-affirmation {
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            color: #5d7482;
+            font-style: italic;
+            margin: 0.2rem auto 0.5rem;
+            max-width: 80%;
+            line-height: 1.4;
+        }
 
-    input[type="color"] {
-      width: 100%;
-      height: 45px;
-      padding: 0 5px;
-      border: 1px solid var(--glass-border);
-      background: var(--input-bg);
-      border-radius: 8px;
-      cursor: pointer;
-    }
+        .datetime-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 0.4rem;
+            margin-bottom: 1rem;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        .datetime {
+            font-size: 0.8rem;
+            color: #5d7482;
+            font-weight: 500;
+            background: #f0f8ff;
+            border-radius: 999px;
+            padding: 0.43rem 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
 
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: 500;
-      color: #ddd;
-      text-align: left;
-      margin-left: 5px;
-    }
+        .clock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #4facfe;
+            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.25);
+        }
 
-    input[type="text"], input[type="file"] {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      border: 1px solid var(--glass-border);
-      background: var(--input-bg);
-      color: #fff;
-      font-size: 1rem;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-      outline: none;
-    }
+        .top-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+        }
 
-    input[type="file"]::file-selector-button {
-      background: var(--accent-color);
-      border: none;
-      color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin-right: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+        .info-text {
+            font-size: 0.78rem;
+            color: #8b637e;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
 
-    input[type="file"]::file-selector-button:hover {
-      background: #d63d55;
-    }
+        .info-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--pink-main);
+        }
 
-    input[type="text"]:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 10px rgba(233, 69, 96, 0.3);
-    }
+        /* TOMBOL EDIT USER DI POJOK KANAN ATAS (FIXED) */
+        #edit-users-btn {
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 50;
+            border-radius: 999px;
+            border: none;
+            padding: 0.5rem 1.1rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #fff;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
+            box-shadow: 0 7px 16px rgba(79, 172, 254, 0.4);
+        }
 
-    button.action-btn {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(90deg, #e94560, #ff6b6b);
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
+        #edit-users-btn:hover {
+            filter: brightness(1.05);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.5);
+        }
 
-    button.action-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(233, 69, 96, 0.3);
-    }
+        .edit-btn-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.9);
+            color: #4facfe;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    button.action-btn:active {
-      transform: translateY(1px);
-    }
+        /* GRID USER */
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.9rem;
+            margin-top: 0.6rem;
+            margin-bottom: 0.2rem;
+            max-height: calc(100vh - 270px);
+            overflow-y: auto;
+            padding-right: 4px;
+        }
 
-    #qr-container {
-      margin-top: 30px;
-      padding: 20px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 15px;
-      display: none; /* Hidden by default */
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-    }
+        .users-grid::-webkit-scrollbar { width: 6px; }
+        .users-grid::-webkit-scrollbar-track {
+            background: #e6f7ff;
+            border-radius: 999px;
+        }
+        .users-grid::-webkit-scrollbar-thumb {
+            background: #b3e5fc;
+            border-radius: 999px;
+        }
 
-    canvas {
-      max-width: 100%;
-      height: auto;
-      border-radius: 5px;
-    }
+        /* KARTU USER – DESAIN + ANIMASI */
+        .user-card {
+            position: relative;
+            border-radius: 18px;
+            padding: 0.75rem 0.8rem;
+            background: radial-gradient(circle at top left, #e0f7fa, #ffebf4);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            color: #3a1123;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: space-between;
+            min-height: 86px;
+            overflow: hidden;
 
-    .download-section {
-      margin-top: 20px;
-      display: none;
-      width: 100%;
-    }
+            /* animasi utama */
+            opacity: 0;
+            transform: translateY(18px) scale(0.97);
+            box-shadow: 0 9px 18px rgba(100, 149, 237, 0.15);
+            transition: transform 0.16s ease, box-shadow 0.16s ease;
 
-    .download-row {
-      display: flex;
-      gap: 10px;
-    }
+            animation-name: popIn, floatGlow;
+            animation-duration: 0.45s, 3.2s;
+            animation-timing-function: ease, ease-in-out;
+            animation-fill-mode: forwards, both;
+            animation-iteration-count: 1, infinite;
+            animation-delay: var(--stagger, 0s), 0.6s;
+        }
 
-    .download-row input {
-      flex: 1;
-      margin-bottom: 0;
-    }
+        .user-card::before {
+            content: "";
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            top: -60%;
+            right: -40%;
+            background: radial-gradient(circle, rgba(255,255,255,0.7), transparent 60%);
+            opacity: 0.7;
+            pointer-events: none;
+        }
 
-    .download-btn {
-      padding: 0 20px;
-      background: #0f3460;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
+        /* RIPPLE CLICK */
+        .user-card::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            background: rgba(255,255,255,0.75);
+            border-radius: 999px;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
 
-    .download-btn:hover {
-      background: #16213e;
-    }
+        .user-card:active::after {
+            animation: ripple 0.5s ease-out;
+        }
 
-    .alert {
-      padding: 12px;
-      margin-bottom: 20px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      display: none;
-    }
-    .alert.error { background: rgba(255, 0, 0, 0.2); color: #ffcccc; border: 1px solid #ff0000; }
-    .alert.success { background: rgba(0, 255, 0, 0.2); color: #ccffcc; border: 1px solid #00ff00; }
-    .alert.warning { background: rgba(255, 255, 0, 0.2); color: #ffffcc; border: 1px solid #ffff00; }
+        /* HOVER GLOW & WOBBLE */
+        .user-card:hover {
+            transform: translateY(-3px) scale(1.01);
+            box-shadow:
+                0 13px 26px rgba(100, 149, 237, 0.25),
+                0 0 18px rgba(135, 206, 250, 0.25);
+            animation: wobble 1s ease-in-out infinite;
+        }
 
-    footer {
-      margin-top: 30px;
-      font-size: 0.8rem;
-      opacity: 0.6;
-    }
-  </style>
+        @keyframes wobble {
+            0%, 100% { transform: translateY(-3px) rotate(0deg); }
+            25% { transform: translateY(-3px) rotate(-1deg); }
+            75% { transform: translateY(-3px) rotate(1deg); }
+        }
+
+        .user-card:active {
+            transform: translateY(1px) scale(0.99);
+            box-shadow: 0 6px 13px rgba(100, 149, 237, 0.15);
+        }
+
+        .user-card-header {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.2rem;
+        }
+
+        .user-badge {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #4facfe;
+            box-shadow: 0 2px 6px rgba(79, 172, 254, 0.2);
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            max-width: 80px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .user-sub {
+            font-size: 0.7rem;
+            color: #5f2241;
+            opacity: 0.9;
+        }
+
+        .user-pill {
+            margin-top: 0.3rem;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            border: 1px dashed rgba(255, 255, 255, 0.9);
+            background: linear-gradient(90deg, rgba(255,255,255,0.65), rgba(255,255,255,0.35));
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .user-pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #4facfe;
+        }
+
+        .footer-note {
+            margin-top: 0.5rem;
+            font-size: 0.72rem;
+            text-align: center;
+            color: #9a6a86;
+        }
+
+        /* EDIT PANEL */
+        .edit-panel-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(54, 7, 34, 0.45);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 60;
+        }
+
+        .edit-panel-backdrop.show { display: flex; }
+
+        .edit-panel {
+            width: 100%;
+            max-width: 420px;
+            background: #fff5fb;
+            border-radius: 20px;
+            border: 1px solid #ffc9e4;
+            box-shadow: 0 20px 48px rgba(112, 16, 61, 0.45);
+            padding: 16px 16px 14px;
+        }
+
+        .edit-panel-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #3a1830;
+            margin-bottom: 0.2rem;
+        }
+
+        .edit-panel-sub {
+            font-size: 0.8rem;
+            color: #85556e;
+            margin-bottom: 0.7rem;
+        }
+
+        .edit-users-list {
+            max-height: 260px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin-bottom: 0.7rem;
+        }
+
+        .edit-users-list::-webkit-scrollbar { width: 6px; }
+        .edit-users-list::-webkit-scrollbar-thumb {
+            background: #ff9cc7;
+            border-radius: 999px;
+        }
+
+        .edit-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.45rem;
+        }
+
+        .edit-label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #7b3259;
+            width: 68px;
+            flex-shrink: 0;
+        }
+
+        .edit-input {
+            flex: 1;
+            border-radius: 999px;
+            border: 1px solid #ffc0df;
+            padding: 0.32rem 0.7rem;
+            font-size: 0.8rem;
+            outline: none;
+            background: #fff;
+        }
+
+        .edit-input:focus {
+            border-color: #ff6fa8;
+            box-shadow: 0 0 0 2px rgba(255, 152, 203, 0.4);
+        }
+
+        .edit-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-top: 0.1rem;
+        }
+
+        .btn-ghost {
+            border-radius: 999px;
+            border: 1px solid #e3b6cf;
+            background: transparent;
+            padding: 0.35rem 0.9rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: #814461;
+        }
+
+        .btn-primary {
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #ff6fa8, #ff93c0);
+            padding: 0.38rem 1.1rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            font-weight: 600;
+            color: #fff;
+            box-shadow: 0 7px 16px rgba(223, 88, 146, 0.6);
+        }
+
+        .btn-primary:hover { filter: brightness(1.03); }
+
+        /* FAIRY DUST POINTER */
+        .fairy-dust {
+            position: fixed;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 10px #ff6fa8, 0 0 20px #ff94c1;
+            animation: fadeOut 1s forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fadeOut {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0); opacity: 0; }
+        }
+
+        /* BACKGROUND FLOATING BUBBLES */
+        .floating-bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.4) 20%, rgba(255,255,255,0) 60%);
+            box-shadow: inset 0 0 10px rgba(255,255,255,0.5), 0 0 10px rgba(255,255,255,0.2);
+            z-index: 0;
+            animation: floatUp linear infinite;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.4);
+        }
+
+        .floating-bubble::after {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 25%;
+            height: 15%;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.9);
+            transform: rotate(-45deg);
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        .bubble-pop {
+            animation: pop 0.3s ease-out forwards !important;
+        }
+
+        /* ANIMASI KEYFRAMES */
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes floatGlow {
+            0% {
+                box-shadow: 0 9px 18px rgba(225,103,157,0.40);
+            }
+            50% {
+                box-shadow:
+                    0 12px 24px rgba(225,103,157,0.55),
+                    0 0 14px rgba(255,130,190,0.45);
+            }
+            100% {
+                box-shadow: 0 9px 18px rgba(225,103,157,0.40);
+            }
+        }
+
+        @keyframes ripple {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.7;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(18);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .app-shell { padding: 20px 14px 18px; }
+            .welcome-title { font-size: 1.8rem; }
+            .main-title { font-size: 1.35rem; }
+        }
+    </style>
 </head>
 <body>
-
-  <div class="background-shapes">
-    <div class="shape"></div>
-    <div class="shape"></div>
-  </div>
-
-  <div class="container">
-    <h1>QR Code Master</h1>
-
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('text')"><i class="fas fa-font"></i> Text to QR</button>
-      <button class="tab-btn" onclick="switchTab('image')"><i class="fas fa-image"></i> Picture to QR</button>
-    </div>
-
-    <div id="alert-box" class="alert"></div>
-
-    <div id="text-section" class="input-group active">
-      <label for="inputText">Enter Text or URL</label>
-      <input type="text" id="inputText" placeholder="e.g., https://example.com or Hello World">
-    </div>
-
-    <div id="image-section" class="input-group">
-      <label for="inputImage">Select Image</label>
-      <input type="file" id="inputImage" accept="image/*">
-      <div class="alert warning" style="display: block; font-size: 0.8em; margin-top: -15px; margin-bottom: 15px;">
-        <i class="fas fa-exclamation-triangle"></i> Note: Large images may not fit in a QR code. Use small icons or low-res images.
-      </div>
-    </div>
-
-    <div class="color-section">
-      <div class="color-group">
-        <label for="colorDark">QR Color</label>
-        <input type="color" id="colorDark" value="#0f3460">
-      </div>
-      <div class="color-group">
-        <label for="colorLight">Background</label>
-        <input type="color" id="colorLight" value="#ffffff">
-      </div>
-    </div>
-
-    <button class="action-btn" onclick="generateQR()">
-      <i class="fas fa-qrcode"></i> Generate QR Code
+    <!-- Tombol Edit User di pojok kanan atas -->
+    <button id="edit-users-btn" type="button">
+        <span class="edit-btn-icon">✎</span>
+        <span>Edit Nama User</span>
     </button>
 
-    <div id="qr-container">
-      <div id="canvas-wrapper"></div>
-      <div class="download-section" id="download-section">
-        <div class="download-row">
-          <input type="text" id="fileName" placeholder="Filename (optional)">
-          <button class="download-btn" onclick="downloadQR()">
-            <i class="fas fa-download"></i>
-          </button>
+    <div class="foam-decoration"></div>
+
+    <div class="max-w-md mx-auto app-shell">
+        <!-- WELCOME PAGE -->
+        <div id="welcome-page" class="fade-transition" style="opacity: 1;">
+            <div class="welcome-tag">WELCOME TO</div>
+            <h1 class="welcome-title">Acorn Consultant<br>MRIT Project</h1>
+            <p class="welcome-sub">
+                MRIT Project • Akses survey terorganisir untuk setiap user.
+            </p>
+            <button id="start-btn">PRESS START TO CONTINUE</button>
         </div>
-      </div>
+
+        <!-- MAIN VIEW -->
+        <div id="main-view" class="fade-transition" style="display:none; opacity:0;">
+            <div class="main-header">
+                <div class="main-pill">
+                    <span>MRIT Project</span>
+                </div>
+                <h1 class="main-title">User Survey Panel</h1>
+                <div id="daily-affirmation" class="daily-affirmation"></div>
+                <div class="datetime-wrapper">
+                    <div class="datetime">
+                        <span class="clock-dot"></span>
+                        <span id="datetime-text"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="top-actions">
+                <div class="info-text">
+                    <span class="info-dot"></span>
+                    <span>Tap kartu user untuk membuka link survey</span>
+                </div>
+            </div>
+
+            <div id="users-grid" class="users-grid"></div>
+
+            <div class="footer-note">
+                Good luck!!!.
+            </div>
+        </div>
     </div>
 
-    <footer>
-      Design & Code by Jules
-    </footer>
-  </div>
+    <!-- MODAL EDIT NAMA USER -->
+    <div id="edit-panel-backdrop" class="edit-panel-backdrop">
+        <div class="edit-panel">
+            <div class="edit-panel-title">Edit Nama User</div>
+            <div class="edit-panel-sub">
+                Gunakan untuk mengganti label <strong>User 1 – User 10</strong> sesuai kebutuhan.
+            </div>
+            <div id="edit-users-list" class="edit-users-list"></div>
+            <div class="edit-actions">
+                <button id="edit-cancel" class="btn-ghost" type="button">Batal</button>
+                <button id="edit-save" class="btn-primary" type="button">Simpan</button>
+            </div>
+        </div>
+    </div>
 
-  <script>
-    let currentMode = 'text';
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const SURVEY_LINK = "https://www.dooblocawi.com/client/Survey.aspx?Ticket=QGBFNFCV";
+            const PASSWORD_EDIT = "Aco123";
 
-    function switchTab(mode) {
-      currentMode = mode;
-      
-      // Update Tab UI
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-      const activeBtn = mode === 'text' ? document.querySelector('.tab-btn:nth-child(1)') : document.querySelector('.tab-btn:nth-child(2)');
-      activeBtn.classList.add('active');
+            const welcomePage = document.getElementById('welcome-page');
+            const startBtn = document.getElementById('start-btn');
+            const mainView = document.getElementById('main-view');
+            const usersGrid = document.getElementById('users-grid');
+            const datetimeText = document.getElementById('datetime-text');
 
-      // Update Input UI
-      document.querySelectorAll('.input-group').forEach(group => group.classList.remove('active'));
-      document.getElementById(mode + '-section').classList.add('active');
+            const editBtn = document.getElementById('edit-users-btn');
+            const editBackdrop = document.getElementById('edit-panel-backdrop');
+            const editUsersList = document.getElementById('edit-users-list');
+            const editCancel = document.getElementById('edit-cancel');
+            const editSave = document.getElementById('edit-save');
 
-      // Hide QR result when switching
-      document.getElementById('qr-container').style.display = 'none';
-      hideAlert();
-    }
+            // Data user default
+            const users = [];
+            const defaultNames = [
+                "Vitri", "Griselda", "Sri Suwarti", "Grace", "Diana Yusnita",
+                "Lila", "Windy", "Fetty", "Erni", "Romlah"
+            ];
 
-    function showAlert(msg, type) {
-      const el = document.getElementById('alert-box');
-      el.textContent = msg;
-      el.className = `alert ${type}`;
-      el.style.display = 'block';
-    }
+            for (let i = 0; i < 10; i++) {
+                const id = `user${String(i + 1).padStart(2, '0')}`;
+                users.push({
+                    id,
+                    name: defaultNames[i]
+                });
+            }
 
-    function hideAlert() {
-      document.getElementById('alert-box').style.display = 'none';
-    }
+            // Load custom nama dari localStorage (v2 to reset defaults)
+            const storedNames = JSON.parse(localStorage.getItem('ShankaraUserNames_v2') || '{}');
+            if (storedNames && typeof storedNames === 'object') {
+                users.forEach(u => {
+                    if (storedNames[u.id]) {
+                        u.name = storedNames[u.id];
+                    }
+                });
+            }
 
-    async function generateQR() {
-      hideAlert();
-      const canvasWrapper = document.getElementById('canvas-wrapper');
-      const qrContainer = document.getElementById('qr-container');
-      const downloadSection = document.getElementById('download-section');
-      
-      canvasWrapper.innerHTML = ''; // Clear previous
-      qrContainer.style.display = 'none';
+            // Render kartu user
+            function renderUserGrid() {
+                usersGrid.innerHTML = '';
+                users.forEach((user, index) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'user-card';
+                    btn.style.setProperty('--stagger', (index * 0.08) + 's');
 
-      let dataToEncode = '';
+                    btn.innerHTML = `
+                        <div class="user-card-header">
+                            <div class="user-badge">#${index + 1}</div>
+                            <div style="text-align:right;">
+                                <div class="user-name" title="${user.name}">${user.name}</div>
+                                <div class="user-sub">Survey MRIT</div>
+                            </div>
+                        </div>
+                        <div class="user-pill">
+                            <span class="user-pill-dot"></span>
+                            <span>Buka link survey</span>
+                        </div>
+                    `;
 
-      if (currentMode === 'text') {
-        const text = document.getElementById('inputText').value.trim();
-        if (!text) {
-          showAlert('Please enter some text or a URL.', 'error');
-          return;
-        }
-        dataToEncode = text;
-        createQR(dataToEncode);
-      } else {
-        const fileInput = document.getElementById('inputImage');
-        if (fileInput.files.length === 0) {
-          showAlert('Please select an image file.', 'error');
-          return;
-        }
-        
-        const file = fileInput.files[0];
-        // Size check (Limit to ~2KB for safe QR encoding, though V40 supports up to ~3KB)
-        if (file.size > 3000) {
-           showAlert('Image is too large! Please use an image smaller than 3KB.', 'error');
-           return;
-        }
+                    btn.addEventListener('click', () => {
+                        window.open(SURVEY_LINK, '_blank', 'noopener,noreferrer');
+                    });
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          dataToEncode = e.target.result;
-          createQR(dataToEncode);
-        };
-        reader.onerror = function() {
-          showAlert('Failed to read file.', 'error');
-        };
-        reader.readAsDataURL(file);
-      }
-    }
+                    usersGrid.appendChild(btn);
+                });
+            }
 
-    function createQR(text) {
-      const canvasWrapper = document.getElementById('canvas-wrapper');
-      const qrContainer = document.getElementById('qr-container');
-      const downloadSection = document.getElementById('download-section');
-      
-      const colorDark = document.getElementById('colorDark').value;
-      const colorLight = document.getElementById('colorLight').value;
+            // Update datetime (Asia/Jakarta)
+            function updateDateTime() {
+                const now = new Date();
+                const options = {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'Asia/Jakarta'
+                };
+                datetimeText.textContent = now.toLocaleString('id-ID', options);
+            }
 
-      // Create canvas element
-      const canvas = document.createElement('canvas');
-      canvasWrapper.appendChild(canvas);
+            // Transisi dari welcome ke main
+            startBtn.addEventListener('click', () => {
+                // Confetti Explosion
+                const duration = 2000;
+                const end = Date.now() + duration;
 
-      QRCode.toCanvas(canvas, text, {
-        width: 250,
-        margin: 2,
-        color: {
-          dark: colorDark,
-          light: colorLight
-        }
-      }, function (error) {
-        if (error) {
-          console.error(error);
-          if (error.message && error.message.includes('too big')) {
-             showAlert('Data is too big for the QR Code. Try a shorter text or smaller image.', 'error');
-          } else {
-             showAlert('Error generating QR Code.', 'error');
-          }
-        } else {
-          qrContainer.style.display = 'flex';
-          downloadSection.style.display = 'block';
-        }
-      });
-    }
+                (function frame() {
+                    confetti({
+                        particleCount: 7,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#ff6fa8', '#ff94c1', '#ffd1e4']
+                    });
+                    confetti({
+                        particleCount: 7,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#ff6fa8', '#ff94c1', '#ffd1e4']
+                    });
 
-    function downloadQR() {
-      const canvas = document.querySelector('canvas');
-      if (!canvas) return;
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                }());
 
-      const link = document.createElement('a');
-      let name = document.getElementById('fileName').value.trim();
-      if (!name) name = 'qr-code';
-      
-      link.download = name + '.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-    
-    // Auto-generate for text (optional, sticking to button for consistent UX across tabs)
-    // But user liked "fixing" code, maybe they liked the auto-feature. 
-    // Let's add it back for text only with debounce.
-    let timeout = null;
-    document.getElementById('inputText').addEventListener('input', function() {
-        if(currentMode === 'text') {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
-                if(this.value.trim().length > 0) generateQR();
-            }, 800);
-        }
-    });
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 100,
+                        spread: 100,
+                        origin: { y: 0.6 },
+                        colors: ['#ff6fa8', '#e04584', '#ffffff']
+                    });
+                }, 300);
 
-  </script>
+                welcomePage.style.opacity = '0';
+                setTimeout(() => {
+                    welcomePage.style.display = 'none';
+                    mainView.style.display = 'block';
+                    requestAnimationFrame(() => {
+                        mainView.style.opacity = '1';
+                    });
+                }, 400);
+            });
+
+            // Buka panel edit (dengan password)
+            editBtn.addEventListener('click', () => {
+                const pwd = prompt('Masukkan password untuk mengedit nama user:');
+                if (pwd === null) return;
+                if (pwd !== PASSWORD_EDIT) {
+                    alert('Password salah.');
+                    return;
+                }
+                openEditPanel();
+            });
+
+            function openEditPanel() {
+                editUsersList.innerHTML = '';
+                users.forEach((user, index) => {
+                    const row = document.createElement('div');
+                    row.className = 'edit-row';
+                    row.innerHTML = `
+                        <div class="edit-label">User ${index + 1}</div>
+                        <input
+                            type="text"
+                            class="edit-input"
+                            data-id="${user.id}"
+                            value="${user.name}"
+                            maxlength="30"
+                        />
+                    `;
+                    editUsersList.appendChild(row);
+                });
+                editBackdrop.classList.add('show');
+            }
+
+            editCancel.addEventListener('click', () => {
+                editBackdrop.classList.remove('show');
+            });
+
+            editSave.addEventListener('click', () => {
+                const inputs = editUsersList.querySelectorAll('.edit-input');
+                const newNames = {};
+                inputs.forEach(input => {
+                    const id = input.getAttribute('data-id');
+                    let value = input.value.trim();
+                    if (!value) {
+                        const index = users.findIndex(u => u.id === id);
+                        value = defaultNames[index];
+                        input.value = value;
+                    }
+                    newNames[id] = value;
+                });
+
+                localStorage.setItem('ShankaraUserNames_v2', JSON.stringify(newNames));
+                users.forEach(u => {
+                    if (newNames[u.id]) {
+                        u.name = newNames[u.id];
+                    }
+                });
+
+                renderUserGrid();
+                editBackdrop.classList.remove('show');
+            });
+
+            // Tutup panel kalau klik di luar box
+            editBackdrop.addEventListener('click', (e) => {
+                if (e.target === editBackdrop) {
+                    editBackdrop.classList.remove('show');
+                }
+            });
+
+            // Daily Affirmations
+            const affirmations = [
+                "You are capable of amazing things.",
+                "Your potential is endless.",
+                "Radiate positivity today.",
+                "You are strong, confident, and unstoppable.",
+                "Believe in yourself and all that you are.",
+                "Today is a beautiful day to be alive.",
+                "You are enough, just as you are.",
+                "Embrace the magic within you.",
+                "Your smile lights up the world.",
+                "You are creating a life you love."
+            ];
+
+            function setDailyAffirmation() {
+                const affirmationEl = document.getElementById('daily-affirmation');
+                const randomAffirmation = affirmations[Math.floor(Math.random() * affirmations.length)];
+                affirmationEl.textContent = `“${randomAffirmation}”`;
+            }
+
+            // Fairy Dust Cursor
+            document.addEventListener('mousemove', (e) => {
+                const dust = document.createElement('div');
+                dust.classList.add('fairy-dust');
+                dust.style.left = e.pageX + 'px';
+                dust.style.top = e.pageY + 'px';
+
+                // Randomize color slightly
+                const colors = ['#ff6fa8', '#ffd1e4', '#ffffff', '#fff5fb'];
+                dust.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                document.body.appendChild(dust);
+
+                setTimeout(() => {
+                    dust.remove();
+                }, 1000);
+            });
+
+            // Floating Bubbles Background
+            function createBubbles() {
+                const bubbleCount = 25; // More bubbles
+                for (let i = 0; i < bubbleCount; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('floating-bubble');
+
+                    const size = Math.random() * 60 + 20;
+                    bubble.style.width = size + 'px';
+                    bubble.style.height = size + 'px';
+
+                    bubble.style.left = Math.random() * 100 + 'vw';
+                    bubble.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                    bubble.style.animationDelay = (Math.random() * 5) + 's';
+
+                    // Interactive Pop
+                    bubble.addEventListener('click', (e) => {
+                        e.stopPropagation(); // prevent clicking things behind
+                        bubble.classList.add('bubble-pop');
+                        setTimeout(() => {
+                            bubble.remove();
+                            // Optional: Respawn bubble after pop?
+                            // For now, let's just leave it as one-time fun or maybe add new one.
+                            // To keep it simple, just remove.
+                        }, 300);
+                    });
+
+                    document.body.appendChild(bubble);
+                }
+            }
+
+            // Inisialisasi
+            renderUserGrid();
+            updateDateTime();
+            setDailyAffirmation();
+            createBubbles();
+            setInterval(updateDateTime, 1000);
+        });
+    </script>
 </body>
 </html>
